@@ -4,8 +4,8 @@ const app = express()
 import mongoose  from "mongoose";
 import dotenv from "dotenv"
 import Userrouter from './routes/User_routes.js';
-
-
+import Authrouter from './routes/Auth_routes.js';
+app.use(express.json())
 dotenv.config();
 mongoose.connect(process.env.MONGODB).then(()=> {
    console.log("Connected to MongoDb")
@@ -21,3 +21,14 @@ app.listen(3000 , ()=> {
 })
 
 app.use("/api/user",Userrouter);
+app.use("/api/auth",Authrouter);
+
+app.use((err,req,res,next)=> {
+   const statuscode = err.statusCode || 500 
+   const message = err.message || "internal server error"
+   return res.json ({
+      success:false ,
+       statuscode ,
+       message
+   })
+})
