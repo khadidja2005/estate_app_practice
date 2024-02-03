@@ -1,8 +1,6 @@
 import express from "express";
 const app = express()
 
-
-
 import mongoose  from "mongoose";
 import dotenv from "dotenv"
 import Userrouter from './routes/User_routes.js';
@@ -24,7 +22,6 @@ app.listen(3000 , ()=> {
 
 app.use("/api/user",Userrouter);
 app.use("/api/auth",Authrouter);
-
 app.use((err, req, res, next) => {
    const statusCode = err.statusCode || 500;
    const message = err.message || 'Internal Server Error';
