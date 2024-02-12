@@ -45,7 +45,12 @@ export const google = async (req , res, next) => {
    }else {
     const generatepassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8) ;
     const hashedpassword = bcrypt.hashSync(generatepassword,10).toLowerCase;
-    const newuser = new User({username : req.body.name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4) , email : req.body.email , password : hashedpassword})
+    const newuser = new User({username : req.body.name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4) , email : req.body.email , password : hashedpassword , avatar : req.body.photo})
+    await newuser.save();
+    const token = jwt.sign({id: newuser._id} , process.env.JWT_SECRET);
+    const { password : pass , ...rest} = newuser._doc ;
+    res.cookie('access_token' , token , {httpOnly: true}).status(200).json(rest) ;
+    
    }
   } catch (error) {
    next(error)
